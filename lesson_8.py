@@ -143,10 +143,10 @@ def sorted_m(a: List[int]) -> List[int]:
     m = len(a) // 2
     l = sorted_m(a[:m])
     r = sorted_m(a[m:])
-    print(l, "\n", r)
+    # print(l, "\n", r)
     marge(l, r)
 
 
-lis = [1, 2, 7, 4, 56, 2, 5, 8, 76, 34, 6, 5, 2, 5, 9, 4]
+lis = [2, 1]
 
-sorted_m(lis)
+print(sorted_m(lis))
