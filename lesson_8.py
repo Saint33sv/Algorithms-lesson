@@ -114,39 +114,50 @@ def hanoi(n: int, fromm, to, aux: chr) -> None:
     hanoi(n-1, aux, to, fromm)
 
 
-def marge(a, b: List[int]) -> List[int]:
+def marge(a: List[int], l, m, r: int, buf: List[int]) -> None:
     """Рекурсивная функция для слияния двух отсортированых масивов"""
-    p1 = 0
-    p2 = 0
-    res = []
-    while p1 < len(a) or p2 < len(b):
-        if p1 == len(a):
-            res.append(b[p2])
+    p1 = l
+    p2 = m
+    rp = 0
+    while p1 < m or p2 < r:
+        if p1 == m:
+            buf[rp] = a[p2]
             p2 += 1
+            rp += 1
             continue
-        if p2 == len(b):
-            res.append(a[p1])
+        if p2 == r:
+            buf[rp] = a[p1]
             p1 += 1
+            rp += 1
             continue
-        if a[p1] < b[p2]:
-            res.append(a[p1])
+        if a[p1] < a[p2]:
+            buf[rp] = a[p1]
             p1 += 1
+            rp += 1
         else:
-            res.append(b[p2])
+            buf[rp] = a[p2]
             p2 += 1
-    return res
+            rp += 1
+    for i in range(l, r):
+        a[i] = buf[i - l]
 
 
-def sorted_m(a: List[int]) -> List[int]:
-    if len(a) == 1:
-        return a
-    m = len(a) // 2
-    l = sorted_m(a[:m])
-    r = sorted_m(a[m:])
-    # print(l, "\n", r)
-    marge(l, r)
+def sorted_m(a: List[int], l, r: int, buf: List[int]) -> None:
+    """Рекурсивная сортировка слиянием"""
+    if r - l <= 1:
+        return
+    m = (r + l) // 2
+    sorted_m(a, l, m, buf)
+    sorted_m(a, m, r, buf)
+    marge(a, l, m, r, buf)
 
 
-lis = [2, 1]
+def sort_m(a: List[int]) -> None:
+    buf = [0] * len(a)
+    sorted_m(a, 0, len(a), buf)
 
-print(sorted_m(lis))
+
+l = [7, 4, 6, 45, 2, 7, 6, 78, 65, 2, 1, 4, 56, 8, 9]
+
+sort_m(l)
+print(l)
