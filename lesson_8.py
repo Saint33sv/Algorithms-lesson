@@ -1,5 +1,6 @@
 from typing import List
 import string
+import random
 
 
 def lower_bound(a: List[int], key: int, l: int, r: int) -> None:
@@ -157,7 +158,57 @@ def sort_m(a: List[int]) -> None:
     sorted_m(a, 0, len(a), buf)
 
 
+def partition(a: List[int], l, r: int) -> int:
+    """Функция partition, которая в левую половину перемещает все элементы меньше либо
+равные, а в правую больше либо равные медиане"""
+    if r - l < 1:
+        return l
+    i = l
+    j = r-1
+    x = a[l + random.randint(0, (r - l))]
+    while i < j:
+        while a[i] < x:
+            i += 1
+        while a[j] > x:
+            j -= 1
+        if i <= j:
+            a[i], a[j] = a[j], a[i]
+            i += 1
+            j -= 1
+        else:
+            break
+    return i
+
+
+def qsort(a: List[int], l, r: int) -> None:
+    """Функция быстрой сортировки"""
+    if (r - l) <= 1:
+        return
+    m = partition(a, l, r)
+    qsort(a, m, r)
+    qsort(a, l, m)
+
+
+def ktm_element(a: List[int], k: int) -> int:
+    """Для поиска k-ой порядковой статистики можно рекурсивно разбивать массив на две
+части, где в левой все элементы меньше или равны элементам правой части"""
+    l = 0
+    r = len(a)
+    while l + 1 < r:
+        m = partition(a, l, r)
+        if k >= m:
+            l = m
+        else:
+            r = m
+    return a[l]
+
+
+def median(a: List[int]) -> int:
+    """Вариант поиска медианы"""
+    return ktm_element(a, len(a) // 2)
+
+
 l = [7, 4, 6, 45, 2, 7, 6, 78, 65, 2, 1, 4, 56, 8, 9]
 
-sort_m(l)
-print(l)
+m = median(l)
+print(m)
